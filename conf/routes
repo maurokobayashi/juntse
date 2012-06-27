@@ -1,0 +1,13 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                       	    controllers.Atividades.index()
+GET		/atividades/$id<[0-9]+>			controllers.Atividades.show(id: Long)
+GET 	/atividades						controllers.Atividades.list()
+POST	/atividades						controllers.Atividades.create()
+POST	/atividades/$id<[0-9]+>			controllers.Atividades.delete(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               	controllers.Assets.at(path="/public", file)
