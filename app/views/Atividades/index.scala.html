@@ -1,0 +1,54 @@
+@(atividades: List[Atividade], atividadeForm: Form[Atividade])
+
+@import helper._
+
+@main("junt.se beta| experiências únicas, de gente pra gente") {
+    
+    <h1>@atividades.size() atividade(s)</h1>
+    
+    @if(!atividades.isEmpty) {
+	    <table class="table table-striped">
+	        <thead>
+	            <tr>
+	                <th>Título</th>
+	                <th>Descrição</th>
+	                <th>&nbsp;</th>
+	            </tr>
+	        </thead>
+	        @for(atividade <- atividades) {
+	    		<tr>
+	                <td>@atividade.titulo</td>
+	                <td>@atividade.descricao</td>
+	                <td>
+	                	@form(routes.Atividades.delete(atividade.id)) {
+                    		<input type="submit" class="btn btn-danger" value="Excluir">
+                		}
+                	</td>
+	            </tr>
+	        }
+	    </table>
+	} else {
+	}
+    
+    <h2>Criar nova atividade</h2>
+    
+    @form(routes.Atividades.create()) {
+        
+        @inputText(
+	        atividadeForm("titulo"), 
+	        '_label -> "Título", 
+	        '_help -> "Informe um título para a atividade.",
+        	'_error -> atividadeForm.globalError
+        )
+        @inputText(
+	        atividadeForm("descricao"), 
+	        '_label -> "Descrição", 
+	        '_help -> "Descreva a atividade.",
+        	'_error -> atividadeForm.globalError
+        )
+        
+        <input type="submit" class="btn btn-inverse" value="Criar atividade">
+        
+    }
+    
+}

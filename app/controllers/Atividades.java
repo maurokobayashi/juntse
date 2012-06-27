@@ -10,7 +10,7 @@ public class Atividades extends Controller {
 	static Form<Atividade> atividadeForm = form(Atividade.class);
 
     public static Result index() {
-    	return ok("Your new application is ready.");
+    	return redirect(routes.Atividades.list());
     }
     
     public static Result show(Long id) {
@@ -18,7 +18,7 @@ public class Atividades extends Controller {
     }
     
     public static Result list() {
-	  return ok(views.html.index.render(Atividade.all(), atividadeForm));
+	  return ok(views.html.Atividades.index.render(Atividade.all(), atividadeForm));
     }
     
     public static Result create() {
@@ -26,11 +26,11 @@ public class Atividades extends Controller {
     	Form<Atividade> filledForm = atividadeForm.bindFromRequest();
     	  if(filledForm.hasErrors()) {
     	    return badRequest(
-    	      views.html.index.render(Atividade.all(), filledForm)
+    	      views.html.Atividades.index.render(Atividade.all(), filledForm)
     	    );
     	  } else {
     		  Atividade.create(filledForm.get());
-    	    return redirect(routes.Atividades.list());  
+    	    return redirect(routes.Atividades.list());
     	  }
     }
     
