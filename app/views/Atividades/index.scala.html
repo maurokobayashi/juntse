@@ -2,7 +2,7 @@
 
 @import helper._
 
-@main("junt.se beta| experiências únicas, de gente pra gente") {
+@main("junt.se beta | experiências únicas, de gente pra gente") {
     
     <h1>@atividades.size() atividade(s)</h1>
     
@@ -32,23 +32,28 @@
     
     <h2>Criar nova atividade</h2>
     
-    @form(routes.Atividades.create()) {
-        
-        @inputText(
-	        atividadeForm("titulo"), 
-	        '_label -> "Título", 
-	        '_help -> "Informe um título para a atividade.",
-        	'_error -> atividadeForm.globalError
-        )
-        @inputText(
-	        atividadeForm("descricao"), 
-	        '_label -> "Descrição", 
-	        '_help -> "Descreva a atividade.",
-        	'_error -> atividadeForm.globalError
-        )
-        
+    <form action="/atividades" method="POST">
+    	<label>Título</label>
+    	<input id="titulo" type="text" class="span5">
+    	
+    	<label>Local</label>
+    	<input id="local" type="text" class="span5">
+    	
+    	<label>Data</label>
+    	<input id="data" type="text" class="span2" data-date-format="dd/mm/yyyy">
+    	<script>
+    		$('#data').datepicker();
+    	</script>
+    	<label>Horário</label>
+    	<input id="horario" type="text" class="span2">
+    	
+    	<label>Duração</label>
+    	<input id="duracao" type="text" class="span2">
+    	
+    	<label>Participantes</label>
+    	<input id="participantes" type="text" class="span2">
+    	
         <input type="submit" class="btn btn-inverse" value="Criar atividade">
-        
-    }
+    </form>
     
 }
