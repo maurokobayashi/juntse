@@ -7,6 +7,10 @@ create table atividade (
   id                        bigint not null,
   titulo                    varchar(255),
   descricao                 varchar(255),
+  data                      timestamp,
+  local                     varchar(255),
+  duracao                   varchar(255),
+  participantes             varchar(255),
   constraint pk_atividade primary key (id))
 ;
 

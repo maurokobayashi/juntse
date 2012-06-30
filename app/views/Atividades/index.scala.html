@@ -1,10 +1,12 @@
 @(atividades: List[Atividade], atividadeForm: Form[Atividade])
 
 @import helper._
+@import helper.twitterBootstrap._
 
 @main("junt.se beta | experiências únicas, de gente pra gente") {
     
-    <h1>@atividades.size() atividade(s)</h1>
+    <h2>@atividades.size() atividade(s)</h2>
+    <br>
     
     @if(!atividades.isEmpty) {
 	    <table class="table table-striped">
@@ -12,6 +14,10 @@
 	            <tr>
 	                <th>Título</th>
 	                <th>Descrição</th>
+	                <th>Local</th>
+	                <th>Data</th>
+	                <th>Duração</th>
+	                <th>Max. participantes</th>
 	                <th>&nbsp;</th>
 	            </tr>
 	        </thead>
@@ -19,6 +25,10 @@
 	    		<tr>
 	                <td>@atividade.titulo</td>
 	                <td>@atividade.descricao</td>
+	                <td>@atividade.local</td>
+	                <td>@atividade.data</td>
+	                <td>@atividade.duracao</td>
+	                <td>@atividade.participantes</td>
 	                <td>
 	                	@form(routes.Atividades.delete(atividade.id)) {
                     		<input type="submit" class="btn btn-danger" value="Excluir">
@@ -28,32 +38,66 @@
 	        }
 	    </table>
 	} else {
+		<h3>Ninguém cadastrou a atividade de seu interesse. Seja o primeiro!<h3>
+		<br><br>
 	}
     
     <h2>Criar nova atividade</h2>
+    <br>
     
-    <form action="/atividades" method="POST">
-    	<label>Título</label>
-    	<input id="titulo" type="text" class="span5">
-    	
-    	<label>Local</label>
-    	<input id="local" type="text" class="span5">
-    	
-    	<label>Data</label>
-    	<input id="data" type="text" class="span2" data-date-format="dd/mm/yyyy">
-    	<script>
-    		$('#data').datepicker();
-    	</script>
-    	<label>Horário</label>
-    	<input id="horario" type="text" class="span2">
-    	
-    	<label>Duração</label>
-    	<input id="duracao" type="text" class="span2">
-    	
-    	<label>Participantes</label>
-    	<input id="participantes" type="text" class="span2">
-    	
-        <input type="submit" class="btn btn-inverse" value="Criar atividade">
-    </form>
+    @form(routes.Atividades.create(), 'class -> "form-vertical") {
     
+    	@inputText(
+			atividadeForm("titulo"),
+			'_label -> "Título",
+			'placeholder -> "Observar a florada das cerejeiras no Parque do Carmo / SP",
+			'class -> "span5",
+			'_showConstraints -> false
+		)
+		
+		@textarea(
+			atividadeForm("descricao"),
+			'_label -> "Descrição",
+			'placeholder -> "Detalhes da atividade, dicas e informações adicionais.",
+			'rows -> 5,
+			'class -> "span5",
+			'_showConstraints -> false
+        )
+    	
+    	@inputText(
+			atividadeForm("local"),			
+			'_label -> "Local",
+			'placeholder -> "Parque do Carmo, São Paulo/SP",
+			'class -> "span5",
+			'_showConstraints -> false
+		)
+    	
+    	@inputDate(
+    		atividadeForm("data"),
+    		'_label -> "Data",
+    		'placeholder -> "dd/mm/yyyy",
+			'_showConstraints -> false
+    	)
+    	
+    	
+    	@select(
+			atividadeForm("duracao"), 
+			options(Atividade.duracaoOptions), 
+			'_label -> "Duração",
+			'_default -> "-- Selecione --",
+			'_showConstraints -> false
+        )
+        
+        @inputText(
+			atividadeForm("participantes"),			
+			'_label -> "Limite máximo de participantes",
+			'placeholder -> "",
+			'class -> "span1",
+			'_showConstraints -> false
+		)
+    	
+        <input type="submit" class="btn btn-inverse span5" value="Criar atividade">
+    	
+    }
+ 	   
 }

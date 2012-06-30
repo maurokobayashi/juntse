@@ -8,6 +8,7 @@ GET		/atividades/$id<[0-9]+>			controllers.Atividades.show(id: Long)
 GET 	/atividades						controllers.Atividades.list()
 POST	/atividades						controllers.Atividades.create()
 POST	/atividades/$id<[0-9]+>			controllers.Atividades.delete(id: Long)
+GET		/atividades/explorar/:filtro	controllers.Atividades.explorar(filtro: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file               	controllers.Assets.at(path="/public", file)
