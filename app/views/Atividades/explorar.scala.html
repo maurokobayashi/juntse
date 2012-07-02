@@ -1,0 +1,45 @@
+@(atividades: List[Atividade])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("junt.se beta | experiências únicas, de gente pra gente") {
+    
+    <h2>@atividades.size() atividade(s)</h2>
+    <br>
+    
+    @if(!atividades.isEmpty) {
+	    <table class="table table-striped">
+	        <thead>
+	            <tr>
+	                <th>Título</th>
+	                <th>Descrição</th>
+	                <th>Local</th>
+	                <th>Data</th>
+	                <th>Duração</th>
+	                <th>Max. participantes</th>
+	                <th>&nbsp;</th>
+	            </tr>
+	        </thead>
+	        @for(atividade <- atividades) {
+	    		<tr style="cursor:pointer" onclick="navegar('@routes.Atividades.list/@atividade.id')">
+	                <td>@atividade.titulo</td>
+	                <td>@atividade.descricao</td>
+	                <td>@atividade.local</td>
+	                <td>@atividade.data</td>
+	                <td>@atividade.duracao</td>
+	                <td>@atividade.participantes</td>
+	                <td>
+	                	@form(routes.Atividades.delete(atividade.id)) {
+                    		<input type="submit" class="btn btn-danger" value="Excluir">
+                		}
+                	</td>
+	            </tr>
+	        }
+	    </table>
+	} else {
+		<h3>Ninguém cadastrou a atividade de seu interesse. Seja o primeiro!<h3>
+		<br><br>
+	}
+       
+}

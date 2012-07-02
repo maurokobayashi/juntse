@@ -15,7 +15,6 @@ import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
-import play.db.jpa.JPA;
 
 @Entity
 public class Atividade extends Model {
@@ -32,7 +31,7 @@ public class Atividade extends Model {
 	
 	@Required(message="Informe a data")
 	@Temporal(TemporalType.DATE)
-    @Formats.DateTime(pattern="dd/MM/yyyy")
+    @Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date data;
 	
     @Required(message="Informe o local")
@@ -48,6 +47,10 @@ public class Atividade extends Model {
       return find.all();
     }
     
+    public static Atividade findById(Long id) {
+        return find.byId(id);
+      }
+    
     public static void create(Atividade atividade) {
     	atividade.save();
     }
@@ -55,6 +58,80 @@ public class Atividade extends Model {
     public static void delete(Long id) {
     	find.ref(id).delete();
     }
+    
+    public static List<Atividade> explorarAutoComplete(String filtro) {
+
+    	List<Atividade> atividades = new ArrayList<Atividade>();
+    	
+		if(filtro != null && !filtro.equals("")) {
+			
+			filtro = filtro.trim().toLowerCase();
+			List<Atividade> all = all();
+			
+			for(Atividade atividade : all) {
+				if(atividade.titulo != null && atividade.titulo.trim().toLowerCase().contains(filtro)) {
+					atividades.add(atividade);
+					Logger.debug("Encontrou pelo título");
+				}
+				else if(atividade.descricao != null && atividade.descricao.trim().toLowerCase().contains(filtro)) {
+					atividades.add(atividade);
+					Logger.debug("Encontrou pela descrição");
+				}
+				else if(atividade.local != null && atividade.local.trim().toLowerCase().contains(filtro)) {
+					atividades.add(atividade);
+					Logger.debug("Encontrou pelo local");
+				}
+			}
+			
+			Logger.info("Foram encontrados "+atividades.size()+" atividades para serem exploradas.");
+			return atividades;
+		}
+		
+		return atividades;
+	}
+    
+	public static List<Atividade> explorar(String filtro) {
+		
+    	List<Atividade> atividades = new ArrayList<Atividade>();
+    	
+		if(filtro != null && !filtro.equals("")) {
+			
+			filtro = filtro.trim().toLowerCase();
+			
+			List<Atividade> all = all();
+			
+			for(Atividade atividade : all) {
+				if(atividade.titulo != null && atividade.titulo.trim().toLowerCase().contains(filtro)) {
+					atividades.add(atividade);
+					Logger.debug("Encontrou pelo título");
+				}
+				else if(atividade.descricao != null && atividade.descricao.trim().toLowerCase().contains(filtro)) {
+					atividades.add(atividade);
+					Logger.debug("Encontrou pela descrição");
+				}
+				else if(atividade.local != null && atividade.local.trim().toLowerCase().contains(filtro)) {
+					atividades.add(atividade);
+					Logger.debug("Encontrou pelo local");
+				}
+			}
+			/*
+			final String filtroTratado = filtro.trim().toLowerCase();
+			Logger.debug("filtro recebido: ["+filtro+"], filtro tratado: ["+filtroTratado+"]");
+			
+			String query = "from Atividade a where lower(a.titulo) like ? or lower(a.descricao) like ? or lower(a.local) like ?";
+			
+			List<Atividade> atividades = JPA.em().createQuery(query)
+			.setParameter(1, "%" + filtroTratado + "%")
+			.setParameter(2, "%" + filtroTratado + "%")
+			.setParameter(3, "%" + filtroTratado + "%")
+			.getResultList();
+			*/
+			Logger.info("Foram encontrados "+atividades.size()+" atividades para serem exploradas.");
+			return atividades;
+		}
+		
+		return atividades;
+	}
     
     public static Map<String,String> duracaoOptions() {
         LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
@@ -70,25 +147,4 @@ public class Atividade extends Model {
         return options;
     }
 
-	@SuppressWarnings("unchecked")
-	public static List<Atividade> explorar(String filtro) {
-		
-		if(filtro != null && !filtro.equals("")) {
-			
-			String filtroTratado = filtro.trim().toLowerCase();
-			Logger.debug("filtro recebido: ["+filtro+"], filtro tratado: ["+filtroTratado+"]");
-			
-					List<Atividade> atividades = JPA.em()
-					.createQuery("from Atividade a where lower(a.titulo) like ? or lower(a.descricao) like ? or lower(a.local) like ?")
-					.setParameter(1, "%" + filtroTratado + "%")
-					.setParameter(2, "%" + filtroTratado + "%")
-					.setParameter(3, "%" + filtroTratado + "%")
-					.getResultList();
-			
-			return atividades;
-		}
-		else {
-			return new ArrayList<Atividade>();
-		}
-	}
 }

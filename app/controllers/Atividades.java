@@ -1,11 +1,16 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.Atividade;
+
+import org.codehaus.jackson.JsonNode;
+
 import play.Logger;
 import play.data.Form;
-import play.db.jpa.Transactional;
+import play.libs.Json;
+import play.mvc.Content;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -18,15 +23,25 @@ public class Atividades extends Controller {
     }
     
     public static Result show(Long id) {
-    	return TODO;
+    	Logger.debug("show()");
+    	
+    	Atividade atividade = Atividade.findById(id);
+    	
+    	if(atividade == null) {
+    		return notFound("A atividade não existe.");
+    	}
+    	return ok(views.html.Atividades.show.render(atividade));
     }
     
     public static Result list() {
-	  return ok(views.html.Atividades.index.render(Atividade.all(), atividadeForm));
+    	Logger.debug("list()");
+    	
+    	return ok(views.html.Atividades.index.render(Atividade.all(), atividadeForm));
     }
     
     public static Result create() {
-
+    	Logger.debug("create()");
+    	
     	Form<Atividade> filledForm = atividadeForm.bindFromRequest();
     	Logger.info(filledForm.toString());
     	  
@@ -42,13 +57,31 @@ public class Atividades extends Controller {
     }
     
     public static Result delete(Long id) {
+    	Logger.debug("delete()");
+    	
     	Atividade.delete(id);
     	return redirect(routes.Atividades.list());
     }
-    
-    @Transactional(readOnly=true)
+
     public static Result explorar(String filtro) {
-    	List<Atividade> atividades = Atividade.explorar(filtro);
-    	return ok(views.html.Atividades.index.render(atividades, atividadeForm));
+    	Logger.debug("explorar()");
+    	Logger.debug("Filtro recebido: ["+filtro+"]");
+    	
+    	return ok(views.html.Atividades.explorar.render(Atividade.explorar(filtro)));
+    }
+    
+    public static Result explorarAutoComplete() {
+    	Logger.debug("explorarAutoComplete()");
+    	
+    	List<Atividade> atividades = Atividade.all();
+    	List<String> resultados = new ArrayList<String>();
+    	
+    	for(Atividade atividade : atividades) {
+    		resultados.add(atividade.titulo + " (" + atividade.local + ")");
+    	}
+    	JsonNode json = Json.toJson(resultados);
+
+    	Logger.debug("JSON retornado: " + json.toString());
+    	return ok(json.toString());
     }
 }

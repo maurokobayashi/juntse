@@ -6,11 +6,11 @@
     <head>
 		<meta charset="utf-8">
         <title>@title</title>
-        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")"> 
-        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        
-		<script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap.css")"> 
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("img/favicon.png")">
+		<script src="@routes.Assets.at("js/jquery-1.7.1.min.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.at("js/bootstrap-typeahead.js")" type="text/javascript"></script>
         
     </head>
     <body>
@@ -20,30 +20,60 @@
 				
 					<div class="nav-collapse">
 						<ul class="nav pull-left">
-							<a href="/" class="brand" id="juntse"><strong>junt.se</strong></a>
+							<a href="/" class="brand" id="juntse">
+								<img src="@routes.Assets.at("img/favicon.png")" width="25px" height="25px"/>
+								<strong> junt.se</strong>
+							</a>
 							<li class="divider-vertical"></li>
 						</ul>
 	                    
-	                    <script>
+	                    <script type="text/javascript">
+	                    
+	                    	var navegar = function(url) {
+								window.location = url;
+							}
+	                    
 	                    	$(document).ready(function() {
-								$('#btnExplorar').click(function(){
-									var filtro = $('#iptExplorar').val();
-									
-									var url = '/atividades/explorar/'+filtro;
-									$.ajax({
-										url: url,
-										type: 'GET'
-									});
+	                    	
+								//carregando as atividades
+								var atividades = new Array();
+								$.ajax({
+									url: '/atividades/explorarautocomplete',
+									type: 'GET',
+									dataType: 'json',
+									success: function(data) {
+										$.each(data, function(i, atividade) {
+											atividades.push(atividade);
+										})
+									 },
+									 error: function (xhr, ajaxOptions, thrownError){
+										 console.log(thrownError);
+									 }
 								});
+								
+								var explorar = function() {
+									var filtro = $('#iptExplorar').val();
+									$('#explorar').attr('action', '/atividades/explorar/'+filtro);
+									$('#explorar').submit();
+									
+								};
+									
+								//explorar typeahead
+								$('#iptExplorar').typeahead({
+									source: atividades,
+									items: 10
+								});
+								
+								//explorar submit
+								$('#explorar').submit(explorar);
+								
 							});
+							
 	                    </script>
 	                    
-                        <div id="explorar" class="navbar-search">
-							<input id="iptExplorar" type="text" class="search-query span4" placeholder="pesquise por lugares e atividades únicos...">
-                        	<a id="btnExplorar" class="btn btn-inverse btn-small" href="#">
-                            	explorar!
-                        	</a>
-                        </div>
+                        <form id="explorar" class="navbar-search">
+							<input id="iptExplorar" type="text" data-provide="typeahead" class="search-query span4" placeholder="pesquise por lugares e atividades únicos...">
+                        </form>
 	
 						<ul class="nav pull-right">
 							<li class="divider-vertical"></li>

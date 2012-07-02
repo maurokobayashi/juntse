@@ -2974,6 +2974,7 @@ input[type="submit"].btn.btn-mini {
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
   width: 940px;
+  height: 45px;
 }
 .navbar-fixed-top {
   top: 0;

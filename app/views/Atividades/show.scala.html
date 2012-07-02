@@ -1,0 +1,31 @@
+@(atividade: Atividade)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("junt.se beta | experiências únicas, de gente pra gente") {
+    
+    @if(atividade != null) {
+		
+		<br>    
+		<h2 style="color:#FF0099">@atividade.titulo</h2>
+		<h4>@atividade.local</h4>
+		<br>
+    	<p>
+    		@atividade.descricao
+    	</p>
+    	
+    	<h4>Data:</h4>
+    	@atividade.data
+		<br>
+		<br>
+		<a href="@routes.Atividades.list">Voltar</a>
+		
+	} else {
+		<h3 style="color:#FF0099">Ninguém cadastrou a atividade de seu interesse. Seja o primeiro!<h3>
+		<br>
+		<br>
+		<a href="@routes.Atividades.list">Voltar</a>
+	}
+       
+}
