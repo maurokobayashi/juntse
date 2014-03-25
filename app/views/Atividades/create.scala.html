@@ -1,0 +1,81 @@
+@(atividadeForm: Form[Atividade])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("junt.se beta | experiências únicas, de gente pra gente") {
+    
+    <h2 style="color:#FF0099">@Messages("atividades.criar.header")</h2>
+    <br>
+    
+    @form(routes.Atividades.create(), 'class -> "form-horizontal") {
+    	
+    	<fieldset>
+			@if(atividadeForm.hasGlobalErrors) { 
+				<div class="alert alert-error">
+				<a class="close" data-dismiss="alert">×</a>
+					@atividadeForm.globalError.message
+				</div>
+			}
+			@if(flash.contains("success")) {
+				<div class="alert alert-success">
+				<a class="close" data-dismiss="alert">×</a>
+					@flash.get("success")
+				</div>
+			}
+			
+			@inputText(
+				atividadeForm("titulo"),
+				'_label -> "Título",
+				'placeholder -> "Observar a florada das cerejeiras no Parque do Carmo / SP",
+				'class -> "span5",
+				'_showConstraints -> false
+			)
+			
+			@textarea(
+				atividadeForm("descricao"),
+				'_label -> "Descrição",
+				'placeholder -> "Detalhes da atividade, dicas e informações adicionais.",
+				'rows -> 5,
+				'class -> "span5",
+				'_showConstraints -> false
+			)
+			
+			@inputText(
+				atividadeForm("local"),			
+				'_label -> "Local",
+				'placeholder -> "Parque do Carmo, São Paulo/SP",
+				'class -> "span5",
+				'_showConstraints -> false
+			)
+			
+			@inputDate(
+				atividadeForm("data"),
+				'_label -> "Data",
+				'placeholder -> "dd/mm/yyyy",
+				'_showConstraints -> false
+			)
+			
+			
+			@select(
+				atividadeForm("duracao"), 
+				options(Atividade.duracaoOptions), 
+				'_label -> "Duração",
+				'_default -> "-- Selecione --",
+				'_showConstraints -> false
+			)
+			
+			@inputText(
+				atividadeForm("participantes"),			
+				'_label -> "Limite máximo de participantes",
+				'placeholder -> "",
+				'class -> "span1",
+				'_showConstraints -> false
+			)
+			<br>
+			<input type="submit" class="btn btn-inverse span5" value="Criar atividade">
+		</fieldset>
+    	
+    }
+ 	   
+}
